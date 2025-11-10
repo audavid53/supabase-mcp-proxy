@@ -1,31 +1,31 @@
-export async function handler(event) {
-  // REST endpoint for your project
-  const targetBase = "https://opchdiaepihfxsihiuwv.supabase.co/rest/v1";
+import fetch from "node-fetch";
 
-  // Support query path forwarding, e.g. ?path=users
-  const path = event.queryStringParameters?.path || "";
-  const target = `${targetBase}/${path}`;
+export async function handler(event) {
+  const { path, method, body } = JSON.parse(event.body || "{}");
+
+  const SUPABASE_URL = "https://opchdiaepihfxsihiuwv.supabase.co";
+  const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY; // ✅ securely loaded
 
   try {
-    const response = await fetch(target, {
-      method: event.httpMethod,
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      method: method || "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-        apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
       },
-      body: event.httpMethod !== "GET" && event.body ? event.body : undefined,
+      body: body ? JSON.stringify(body) : undefined
     });
 
-    const text = await response.text();
+    const data = await res.json();
     return {
-      statusCode: response.status,
-      body: text,
+      statusCode: res.status,
+      body: JSON.stringify(data)
     };
-  } catch (err) {
+  } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message }),
+      body: JSON.stringify({ error: error.message })
     };
   }
 }
