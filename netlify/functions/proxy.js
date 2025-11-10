@@ -1,10 +1,8 @@
-import fetch from "node-fetch";
-
 export async function handler(event) {
   const { path, method, body } = JSON.parse(event.body || "{}");
 
   const SUPABASE_URL = "https://opchdiaepihfxsihiuwv.supabase.co";
-  const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY; // ✅ securely loaded
+  const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
