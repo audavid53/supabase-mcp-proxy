@@ -1,6 +1,4 @@
 // netlify/functions/proxy.js
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-
 exports.handler = async function(event) {
   const target = "https://mcp.supabase.com/mcp?project_ref=opchdiaepihfxsihiuwv";
 
