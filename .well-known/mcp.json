@@ -4,7 +4,7 @@
   "endpoints": [
     {
       "type": "mcp",
-      "url": "https://quiet-froyo-15ba8c.netlify.app/.netlify/functions/proxy"
+      "url": "https://proxy.unibord.site/.netlify/functions/proxy"
     }
   ],
   "authentication": {
