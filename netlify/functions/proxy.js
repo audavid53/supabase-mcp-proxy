@@ -1,5 +1,7 @@
 // netlify/functions/proxy.js
-export async function handler(event) {
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
+exports.handler = async function(event) {
   const target = "https://mcp.supabase.com/mcp?project_ref=opchdiaepihfxsihiuwv";
 
   try {
@@ -7,14 +9,20 @@ export async function handler(event) {
       method: event.httpMethod,
       headers: {
         "Content-Type": "application/json",
-        Authorization: Bearer ,
+        "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
       },
-      body: event.httpMethod -ne "GET" ? event.body : ,
+      body: event.httpMethod !== "GET" ? event.body : undefined,
     });
 
     const text = await response.text();
-    return @{ statusCode = .status; body =  };
-  } catch () {
-    return @{ statusCode = 500; body = (ConvertTo-Json @{ error = .message }) };
+    return {
+      statusCode: response.status,
+      body: text,
+    };
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message }),
+    };
   }
-}
+};
